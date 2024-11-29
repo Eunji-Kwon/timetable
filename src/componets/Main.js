@@ -4,6 +4,8 @@ import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { fetchData } from '../api'; // Swagger API 호출 파일
 import { useNavigate } from 'react-router-dom'; // useNavigate 훅을 사용
+import './styles/Main.css'; // Import the CSS file
+
 
 function Main() {
   const navigate = useNavigate();
@@ -44,6 +46,7 @@ function Main() {
     }
     setLoading(true);
     try {
+      //URL .env파일로 변경 해야함
       const response = await fetch(`http://localhost:5096/api/schedule/${studentId}`);
 
       // 응답이 잘 왔는지 확인
@@ -127,76 +130,78 @@ function Main() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '20px' }}>
-      <h2>Course Schedule</h2>
-      {/* 로그인한 ID 정보 표시 */}
-      <div style={{ marginBottom: '20px' }}>
-        <h3>Logged in as: {studentId}</h3>
-      </div>
+    <div className="main-container">
+    <h2>Course Schedule</h2>
 
-      {/* <button onClick={loadSchedule}>Show Timetable</button> */}
-      {/* Weekly Calendar */}
-      {renderWeekCalendar()}
+    {/* Display logged-in ID */}
+    <div style={{ marginBottom: '20px' }}>
+      <h3>Logged in as: {studentId}</h3>
+    </div>
 
-      {/* Form for Adding a Course */}
-      <form onSubmit={handleAddCourse} className="add-course-form">
-        <h2>Add Personal Schedule</h2>
+    {/* Weekly Calendar */}
+    {renderWeekCalendar()}
 
-        <input
-          type="text"
-          name="courseCode"
-          placeholder="Course Code"
-          value={formData.courseCode}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="courseName"
-          placeholder="Course Name"
-          value={formData.courseName}
-          onChange={handleChange}
-          required
-        />
-        <input
-          type="text"
-          name="dayOfWeek"
-          placeholder="Day of Week"
-          value={formData.dayOfWeek}
-          onChange={handleChange}
-        />
-        <label htmlFor="startTime">Start Time</label>
-        <input
-          type="time"
-          name="startTime"
-          value={formData.startTime}
-          onChange={handleChange}
-        />
-        <label htmlFor="endTime">End Time</label>
-        <input
-          type="time"
-          name="endTime"
-          value={formData.endTime}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="classroom"
-          placeholder="Classroom"
-          value={formData.classroom}
-          onChange={handleChange}
-        />
-        <input
-          type="text"
-          name="professor"
-          placeholder="Professor"
-          value={formData.professor}
-          onChange={handleChange}
-        />
-        <button type="submit">Add Course</button>
-      </form>
+    {/* Form for Adding a Course */}
+    <form onSubmit={handleAddCourse} className="add-course-form">
+      <h2>Add Personal Schedule</h2>
 
-     
-      <button onClick={handleLogout}>Logout</button>
+      <input
+        type="text"
+        name="courseCode"
+        placeholder="Course Code"
+        value={formData.courseCode}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="courseName"
+        placeholder="Course Name"
+        value={formData.courseName}
+        onChange={handleChange}
+        required
+      />
+      <input
+        type="text"
+        name="dayOfWeek"
+        placeholder="Day of Week"
+        value={formData.dayOfWeek}
+        onChange={handleChange}
+      />
+      <label htmlFor="startTime">Start Time</label>
+      <input
+        type="time"
+        name="startTime"
+        value={formData.startTime}
+        onChange={handleChange}
+      />
+      <label htmlFor="endTime">End Time</label>
+      <input
+        type="time"
+        name="endTime"
+        value={formData.endTime}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="classroom"
+        placeholder="Classroom"
+        value={formData.classroom}
+        onChange={handleChange}
+      />
+      <input
+        type="text"
+        name="professor"
+        placeholder="Professor"
+        value={formData.professor}
+        onChange={handleChange}
+      />
+      <button type="submit">Add Schedule</button>
+    </form>
+
+    {/* Logout Button */}
+    <button onClick={handleLogout}>Logout</button>
+
+
 
       {/* Swagger 데이터 출력 */}
       <div style={{ marginTop: '50px', color: 'gray' }}>

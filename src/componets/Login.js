@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { fetchData } from '../api'; // API 요청을 위한 fetchData 함수 (필요한 경우 수정)
+import './styles/Login.css'; // Import the CSS file
 
 function Login() {
   const navigate = useNavigate();
@@ -47,20 +48,26 @@ function Login() {
   };
 
   return (
-    <div style={{ textAlign: 'center', marginTop: '50px' }}>
-      <h2>Student Login</h2>
-      <form onSubmit={handleLogin}>
-        <div>
-          <label>Student ID:</label>
-          <input type="text" name="studentId" required />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input type="password" name="password" required />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-    </div>
+    <div className="container">
+    <h2 className="header">Student Login</h2>
+    {error && <p className="error">{error}</p>}
+    <form onSubmit={handleLogin} className="form">
+      <div className="input-group">
+        <label htmlFor="studentId" className="label">Student ID:</label>
+        <input type="text" name="studentId" required className="input" />
+      </div>
+      <div className="input-group">
+        <label htmlFor="password" className="label">Password:</label>
+        <input type="password" name="password" required className="input" />
+      </div>
+      <button type="submit" className="button" disabled={loading}>
+        {loading ? 'Logging in...' : 'Login'}
+      </button>
+    </form>
+    <p className="contact-info">
+      If you don't know your ID and password, <br/> contact the IT department.
+    </p>
+  </div>
   );
 }
 
