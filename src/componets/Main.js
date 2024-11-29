@@ -131,20 +131,22 @@ function Main() {
 
   return (
     <div className="main-container">
-    <h2>Course Schedule</h2>
+  <h2 className="page-title">Course Schedule</h2>
 
-    {/* Display logged-in ID */}
-    <div style={{ marginBottom: '20px' }}>
-      <h3>Logged in as: {studentId}</h3>
-    </div>
+  <div className="logged-in-info">
+    <h3>Logged in as: {studentId}</h3>
+  </div>
 
     {/* Weekly Calendar */}
     {renderWeekCalendar()}
 
     {/* Form for Adding a Course */}
     <form onSubmit={handleAddCourse} className="add-course-form">
-      <h2>Add Personal Schedule</h2>
+  <h3 className="form-title">Add Personal Schedule</h3>
 
+  <div className="form-row">
+    <div className="form-group">
+      <label htmlFor="courseCode">Course Code</label>
       <input
         type="text"
         name="courseCode"
@@ -152,6 +154,11 @@ function Main() {
         value={formData.courseCode}
         onChange={handleChange}
       />
+    </div>
+    <div className="form-group">
+      <label htmlFor="courseName">
+        Course Name <span className="required">*</span>
+      </label>
       <input
         type="text"
         name="courseName"
@@ -160,6 +167,12 @@ function Main() {
         onChange={handleChange}
         required
       />
+    </div>
+  </div>
+
+  <div className="form-row">
+    <div className="form-group">
+      <label htmlFor="dayOfWeek">Day of Week</label>
       <input
         type="text"
         name="dayOfWeek"
@@ -167,20 +180,36 @@ function Main() {
         value={formData.dayOfWeek}
         onChange={handleChange}
       />
-      <label htmlFor="startTime">Start Time</label>
+    </div>
+    <div className="form-group">
+      <label htmlFor="startTime">
+        Start Time <span className="required">*</span>
+      </label>
       <input
         type="time"
         name="startTime"
         value={formData.startTime}
         onChange={handleChange}
+        required
       />
-      <label htmlFor="endTime">End Time</label>
+    </div>
+    <div className="form-group">
+      <label htmlFor="endTime">
+        End Time <span className="required">*</span>
+      </label>
       <input
         type="time"
         name="endTime"
         value={formData.endTime}
         onChange={handleChange}
+        required
       />
+    </div>
+  </div>
+
+  <div className="form-row">
+    <div className="form-group">
+      <label htmlFor="classroom">Classroom</label>
       <input
         type="text"
         name="classroom"
@@ -188,6 +217,9 @@ function Main() {
         value={formData.classroom}
         onChange={handleChange}
       />
+    </div>
+    <div className="form-group">
+      <label htmlFor="professor">Professor</label>
       <input
         type="text"
         name="professor"
@@ -195,11 +227,16 @@ function Main() {
         value={formData.professor}
         onChange={handleChange}
       />
-      <button type="submit">Add Schedule</button>
-    </form>
+    </div>
+  </div>
 
-    {/* Logout Button */}
-    <button onClick={handleLogout}>Logout</button>
+  <button type="submit">Add Course</button>
+</form>
+
+
+<button onClick={handleLogout} className="logout-button">
+    Logout
+  </button>
 
 
 

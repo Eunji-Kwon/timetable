@@ -1,129 +1,134 @@
-/* Main.css */
+/* 대표 색상 */
+:root {
+    --main-color: #e7c22c;
+    --border-color: #ccc;
+    --font-color: #333;
+  }
 
-/* Global styles */
-* {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    color: #333;
-  }
-  
-  /* Main container for the timetable */
-  .main-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin: 20px;
-    padding: 20px;
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  }
-  
-  /* Heading */
-  h2, h3 {
-    color: #e7c22c;
-  }
-  
-  /* Weekly timetable grid container */
-  .weekly-timetable {
-    display: flex;
-    justify-content: space-around;
-    width: 100%;
-    max-width: 1000px;
-    margin-top: 20px;
-  }
-  
-  /* Styling for each day block */
-  .day-block {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 15px;
+  /* Page Title */
+.page-title {
     text-align: center;
-    min-height: 100px;
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--font-color);
+    margin: 20px 0;
+    border-bottom: 2px solid var(--main-color);
+    padding-bottom: 10px;
+  }
+  
+  /* Logged in as */
+  .logged-in-info {
+    text-align: center;
+    font-size: 16px;
+    color: var(--font-color);
+    margin-bottom: 20px;
+  }
+  
+  /* Logout Button */
+  .logout-button {
+    display: block;
+    background-color: var(--main-color);
+    color: white;
+    font-size: 14px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    margin: 0 auto 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+  .logout-button:hover {
+    background-color: #d6b524;
+  }
+  
+  /* Form Title */
+  .form-title {
+    font-size: 18px;
+    font-weight: bold;
+    text-align: left;
+    margin-bottom: 15px;
+    color: var(--font-color);
+    border-left: 4px solid var(--main-color);
+    padding-left: 8px;
+  }
+  
+  /* 전체 Form Layout */
+  .add-course-form {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
-  }
-  
-  .day-block h2 {
-    font-size: 18px;
-    color: #e7c22c;
-    margin-bottom: 10px;
-  }
-  
-  .day-block .schedule-item {
-    background-color: #f7f7f7;
-    padding: 5px;
-    margin-bottom: 5px;
-    border-radius: 4px;
-    font-size: 14px;
-    color: #333;
-  }
-  
-  .day-block .schedule-item:hover {
-    background-color: #e7c22c;
-    color: white;
-  }
-  
-  /* Add course form */
-  .add-course-form input {
-    margin: 5px;
-    padding: 10px;
-    font-size: 14px;
     width: 100%;
-    max-width: 300px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
+    max-width: 600px;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background-color: #fdfdfd;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   }
   
+  /* 각 Row 스타일 */
+  .form-row {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 15px;
+    gap: 10px; /* 여백 추가 */
+  }
+  
+  /* Form Group 스타일 */
+  .form-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .form-group label {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--font-color);
+  }
+  
+  .required {
+    color: red;
+    margin-left: 3px;
+  }
+  
+  .add-course-form input {
+    padding: 8px;
+    font-size: 14px;
+    border: 1px solid var(--border-color);
+    border-radius: 4px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  /* Form Button 스타일 */
   .add-course-form button {
-    background-color: #e7c22c;
+    background-color: var(--main-color);
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     border-radius: 4px;
     font-size: 16px;
     cursor: pointer;
-    width: 100%;
-    max-width: 300px;
+    margin-top: 15px;
+    align-self: flex-end;
   }
   
   .add-course-form button:hover {
     background-color: #d6b524;
   }
   
-  /* Logout button */
-  button {
-    background-color: #ff4d4d;
-    color: white;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
-    margin-top: 20px;
-    cursor: pointer;
-  }
-  
-  button:hover {
-    background-color: #e04343;
-  }
-  
-  @media (max-width: 768px) {
-    .weekly-timetable {
-      flex-direction: column; /* Stack the days vertically on smaller screens */
+  /* 반응형 디자인 */
+  @media (max-width: 600px) {
+    .form-row {
+      flex-direction: column;
     }
-  }
   
-  @media (max-width: 480px) {
-    .weekly-timetable {
-      flex-direction: column; /* Stack the days vertically on very small screens */
+    .form-group {
+      width: 100%;
     }
   }
   
