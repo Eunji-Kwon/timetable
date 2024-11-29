@@ -1,0 +1,59 @@
+
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    margin-bottom: 30px;
+  }
+  
+  .day-box {
+    width: 120px;
+    
+    text-align: center;
+  }
+  
+  .day-box div {
+    margin-bottom: 5px;
+   
+  }
+  
+  .add-course-form {
+    margin-bottom: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  
+  /* 각 입력 필드의 스타일 */
+  .add-course-form input {
+    margin-right: 10px;
+    padding: 5px;
+    margin-bottom: 10px;
+    width: 150px;
+  }
+  
+  .add-course-form button {
+    padding: 5px 10px;
+  }
+  
+  .course-table {
+    margin: 0 auto;
+    width: 80%;
+    text-align: center;
+    border-collapse: collapse;
+  }
+  
+  .course-table th,
+  .course-table td {
+    border: 1px solid #ccc;
+    padding: 8px;
+  }
+  
+  .course-table th {
+    background-color: #f4f4f4;
+  }
+  
+  .course-table td {
+    background-color: #fafafa;
+  }
+  
