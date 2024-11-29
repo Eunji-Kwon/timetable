@@ -7,6 +7,8 @@ import { fetchData } from '../api'; // Swagger API 호출 파일
 
 
 function Main() {
+  const [studentId, setStudentId] = useState(''); // 학생 번호 상태
+
   const [schedule, setSchedule] = useState([]); // 시간표 데이터 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -21,12 +23,20 @@ function Main() {
     classroom: '',
     professor: '',
   });
-
+   // 학생 번호 입력을 처리하는 함수
+   const handleStudentIdChange = (event) => {
+    setStudentId(event.target.value); // 학생 번호를 상태에 저장
+  };
   
    // 데이터를 가져오는 함수
    const loadSchedule = async () => {
+
+    if (!studentId) {
+      setError('학생 번호를 입력해주세요.');
+      return;
+    }
     try {
-      const response = await fetch('http://localhost:5096/api/schedule/301306237');
+      const response = await fetch(`http://localhost:5096/api/schedule/${studentId}`);
       
       // 응답이 잘 왔는지 확인
       if (!response.ok) {
@@ -44,7 +54,7 @@ function Main() {
   useEffect(() => {
     loadSchedule();
   }, []); // 빈 배열을 넣어서 한 번만 실행되게 설정
-  
+
   //Time - 6:00AM to 12:00AM
     const hours = Array.from({ length: 18 }, (_, i) => {
     const hour = 6 + i;
@@ -102,7 +112,13 @@ function Main() {
   return (
     <div style={{ textAlign: 'center', marginTop: '20px' }}>
       <h2>Course Schedule</h2>
-
+      <input
+        type="text"
+        value={studentId}
+        onChange={handleStudentIdChange}
+        placeholder="Student Number"
+      />
+      <button onClick={loadSchedule}>Show Timetable</button>
       {/* Weekly Calnder */}
       {renderWeekCalendar()}
 
