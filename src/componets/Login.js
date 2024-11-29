@@ -13,16 +13,25 @@ function Login() {
     const password = e.target.password.value;
 
     setLoading(true);  // 로딩 시작
+    setError(null); // 이전의 에러 상태 초기화
+
 
     try {
-      // API 호출해서 모든 사용자 데이터를 가져옴
-      const users = await fetchData('/api/login');
+     // API 요청 시 body에 studentId와 password 전달
+     const response = await fetch('/api/login', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ studentId, password }),  // studentId와 password를 JSON 형식으로 전송
+    });
+
+    const data = await response.json();
 
       // 입력한 studentId와 password로 사용자 찾기
-      const user = users.find(user => user.studentId === studentId && user.password === password);
-
-      if (user) {
-        localStorage.setItem('studentId', studentId);
+      if (response.ok) { 
+      //  const user = await response.json();
+      localStorage.setItem('studentId', studentId);
 
         alert('Login successful!');
         navigate('/main');  // 로그인 성공 시 studentId를 state로 전달하여 /main으로 이동

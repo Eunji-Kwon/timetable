@@ -3,8 +3,11 @@ import '../main.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { fetchData } from '../api'; // Swagger API 호출 파일
+import { useNavigate } from 'react-router-dom'; // useNavigate 훅을 사용
 
 function Main() {
+  const navigate = useNavigate();
+
   const [studentId, setStudentId] = useState(''); // 로그인한 ID 상태
   const [schedule, setSchedule] = useState([]); // 시간표 데이터 상태
   const [loading, setLoading] = useState(true);
@@ -36,9 +39,10 @@ function Main() {
   // 데이터를 가져오는 함수
   const loadSchedule = async () => {
     if (!studentId) {
-      setError('학생 번호를 입력해주세요.');
+      setError('Invaild sutend Id');
       return;
     }
+    setLoading(true);
     try {
       const response = await fetch(`http://localhost:5096/api/schedule/${studentId}`);
 
@@ -54,10 +58,12 @@ function Main() {
     }
   };
 
-  // 컴포넌트가 마운트될 때 데이터 로드
-  useEffect(() => {
-    loadSchedule();
-  }, []); // 빈 배열을 넣어서 한 번만 실행되게 설정
+   // studentId가 변경될 때마다 자동으로 loadSchedule 호출
+   useEffect(() => {
+    if (studentId) {
+      loadSchedule();  // studentId가 설정되면 schedule을 자동으로 로딩
+    }
+  }, [studentId]);  // studentId가 변경될 때마다 이 useEffect가 실행됨
 
   // 시간대 처리
   const hours = Array.from({ length: 18 }, (_, i) => {
@@ -84,6 +90,17 @@ function Main() {
       classroom: '',
       professor: '',
     });
+  };
+
+  const handleLogout = () => {
+    // 로그아웃 처리: localStorage 초기화 및 상태 초기화
+    localStorage.removeItem('studentId');
+    setStudentId('');
+    setSchedule([]);
+    setCourses([]);
+    alert('Logged out successfully!');
+    navigate('/'); // 메인 페이지로 리다이렉트
+
   };
 
   const renderWeekCalendar = () => {
@@ -117,7 +134,7 @@ function Main() {
         <h3>Logged in as: {studentId}</h3>
       </div>
 
-      <button onClick={loadSchedule}>Show Timetable</button>
+      {/* <button onClick={loadSchedule}>Show Timetable</button> */}
       {/* Weekly Calendar */}
       {renderWeekCalendar()}
 
@@ -178,33 +195,8 @@ function Main() {
         <button type="submit">Add Course</button>
       </form>
 
-      {/* Table for Displaying Courses */}
-      <table className="course-table">
-        <thead>
-          <tr>
-            <th>Course Code</th>
-            <th>Course Name</th>
-            <th>Day of Week</th>
-            <th>Start Time</th>
-            <th>End Time</th>
-            <th>Classroom</th>
-            <th>Professor</th>
-          </tr>
-        </thead>
-        <tbody>
-          {courses.map((course, index) => (
-            <tr key={index}>
-              <td>{course.courseCode}</td>
-              <td>{course.courseName}</td>
-              <td>{course.dayOfWeek}</td>
-              <td>{course.startTime}</td>
-              <td>{course.endTime}</td>
-              <td>{course.classroom}</td>
-              <td>{course.professor}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
+     
+      <button onClick={handleLogout}>Logout</button>
 
       {/* Swagger 데이터 출력 */}
       <div style={{ marginTop: '50px', color: 'gray' }}>
