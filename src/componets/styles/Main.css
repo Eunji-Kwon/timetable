@@ -183,4 +183,88 @@
       width: 100%;
     }
   }
-  
+
+  /* 캘린더 컨테이너 */
+.calendar-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin: 0 auto;
+    width: 100%;
+    max-width: 1200px;
+}
+
+/* 캘린더 스타일 */
+.weekly-calendar {
+    display: flex;
+    flex-direction: column;
+    font-family: Arial, sans-serif;
+}
+
+.header-row {
+    display: flex;
+}
+
+.time-column-header {
+    width: 80px;
+}
+
+.day-header {
+    flex: 1;
+    text-align: center;
+    background-color: #f4f4f4;
+    padding: 5px;
+    border: 1px solid #ddd;
+}
+
+.body-row {
+    display: flex;
+}
+
+.time-column {
+    width: 80px;
+    display: flex;
+    flex-direction: column;
+}
+
+.time-slot {
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #ddd;
+}
+
+.day-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-block {
+    position: relative;
+    border: 1px solid #ccc;
+    font-size: 12px;
+    color: #333;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 800px) {
+    .main-container {
+        flex-direction: column;
+    }
+
+    .sidebar-left,
+    .sidebar-right {
+        flex: 0 0 100%;
+        margin-bottom: 20px;
+    }
+
+    .calendar-container {
+        flex: 1;
+    }
+}

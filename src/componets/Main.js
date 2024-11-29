@@ -112,17 +112,22 @@ function Main() {
 
   <div className="logged-in-info">
     <h3>Logged in as: {studentId}</h3>
+
+    <button onClick={handleLogout} className="logout-button">
+    Logout
+  </button>
   </div>
+      {/* Weekly Calendar */}
+
   <MyCalendar /> {/* Main 컴포넌트를 화면에 표시 */}
 
-    {/* Weekly Calendar */}
 
     {/* Form for Adding a Course */}
     <form onSubmit={handleAddCourse} className="add-course-form">
   <h3 className="form-title">Add Personal Schedule</h3>
 
   <div className="form-row">
-    <div className="form-group">
+    {/* <div className="form-group">
       <label htmlFor="courseCode">Course Code</label>
       <input
         type="text"
@@ -131,7 +136,7 @@ function Main() {
         value={formData.courseCode}
         onChange={handleChange}
       />
-    </div>
+    </div> */}
     <div className="form-group">
       <label htmlFor="courseName">
         Course Name <span className="required">*</span>
@@ -148,7 +153,7 @@ function Main() {
   </div>
 
   <div className="form-row">
-    <div className="form-group">
+    {/* <div className="form-group">
       <label htmlFor="dayOfWeek">Day of Week</label>
       <input
         type="text"
@@ -157,7 +162,7 @@ function Main() {
         value={formData.dayOfWeek}
         onChange={handleChange}
       />
-    </div>
+    </div> */}
     <div className="form-group">
       <label htmlFor="startTime">
         Start Time <span className="required">*</span>
@@ -211,17 +216,15 @@ function Main() {
 </form>
 
 
-<button onClick={handleLogout} className="logout-button">
-    Logout
-  </button>
+
 
 
 
       {/* Swagger 데이터 출력 */}
-      <div style={{ marginTop: '50px', color: 'gray' }}>
+      {/* <div style={{ marginTop: '50px', color: 'gray' }}>
         <h4>Swagger API Response</h4>
         <pre>{JSON.stringify(schedule, null, 2)}</pre>
-      </div>
+      </div> */}
     </div>
   );
 }
