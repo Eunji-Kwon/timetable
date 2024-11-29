@@ -26,6 +26,8 @@ function Main() {
     professor: '',
   });
 
+  
+
   useEffect(() => {
     // 로그인 후 localStorage에 저장된 studentId를 가져오기
     const loggedInUserId = localStorage.getItem('studentId');
@@ -68,13 +70,7 @@ function Main() {
     }
   }, [studentId]);  // studentId가 변경될 때마다 이 useEffect가 실행됨
 
-  // 시간대 처리
-  const hours = Array.from({ length: 18 }, (_, i) => {
-    const hour = 6 + i;
-    const suffix = hour >= 12 ? 'PM' : 'AM';
-    const displayHour = hour > 12 ? hour - 12 : hour;
-    return `${displayHour} ${suffix}`;
-  });
+
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -106,10 +102,33 @@ function Main() {
 
   };
 
+
+
+//Sample Data
+// const schedule = [
+//   {
+//     date: "2024-12-03", // 날짜
+//     day: "Tuesday", // 요일
+//     timeSlots: [
+//       {
+//         startTime: "12:20",
+//         endTime: "14:30",
+//         courseCode: "COMP231",
+//         courseName: "Software Development Project 1",
+//         classroom: "Online",
+//       },
+//     ],
+//   },
+// ];
+
+//weekly Calnder
   const renderWeekCalendar = () => {
     const startOfWeek = new Date(date);
-    startOfWeek.setDate(date.getDate() - date.getDay()); // Start of week (Sunday)
-
+    const day = startOfWeek.getDay(); // 현재 요일 (0: 일요일, 1: 월요일, ...)
+    const diff = day === 0 ? -6 : 1 - day; // 월요일로 이동 (일요일은 -6, 다른 요일은 1 - 현재 요일)
+  
+    startOfWeek.setDate(startOfWeek.getDate() + diff); // 주 시작 날짜 설정 (월요일)
+  
     const daysOfWeek = [];
     for (let i = 0; i < 7; i++) {
       const day = new Date(startOfWeek);
@@ -117,17 +136,50 @@ function Main() {
       daysOfWeek.push(day);
     }
 
+    const timeSlots = Array.from({ length: 16 }, (_, i) => {
+      const hour = 8 + i;
+      return `${hour < 10 ? `0${hour}` : hour}:00`;
+    });
+
     return (
-      <div className="calendar-container">
-        {daysOfWeek.map((day, index) => (
-          <div key={index} className="day-box">
-            <div>{day.toLocaleDateString()}</div>
-            <div style={{ height: '100px', border: '1px solid #ccc' }}></div>
+    <div className="weekly-calendar">
+    {/* 상단 날짜 및 요일 헤더 */}
+    <div className="header-row">
+      <div className="time-column-header"></div>
+      {daysOfWeek.map((day, index) => (
+        <div key={index} className="day-header">
+        <div>{(day.getMonth() + 1).toString().padStart(2, '0')}-{day.getDate().toString().padStart(2, '0')}</div>
+        <div>{day.toLocaleDateString('en-US', { weekday: 'short' })}</div>
+        </div>
+      ))}
+    </div>
+  {/* 시간대 및 일정 */}
+  <div className="body-row">
+          {/* 시간대 (세로축) */}
+          <div className="time-column">
+            {timeSlots.map((time, index) => (
+              <div key={index} className="time-slot">
+                {time}
+              </div>
+            ))}
           </div>
-        ))}
+
+          {/* 요일별 일정 (가로축) */}
+          {daysOfWeek.map((day, index) => {
+            const formattedDate = day.toISOString().split('T')[0]; // yyyy-mm-dd 형식
+            return (
+              <div key={index} className="day-column">
+                {/* 해당 날짜에 대한 수업 정보가 있으면 표시 (추후 추가 예정) */}
+              </div>
+            );
+          })}
+        </div>
       </div>
-    );
-  };
+  );
+};
+//renderWeekCalendar();
+
+
 
   return (
     <div className="main-container">
