@@ -1,20 +1,39 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { fetchData } from '../api';
+import { fetchData } from '../api'; // API 요청을 위한 fetchData 함수 (필요한 경우 수정)
 
 function Login() {
   const navigate = useNavigate();
+  const [error, setError] = useState(null); // 에러 상태를 관리
+  const [loading, setLoading] = useState(false); // 로딩 상태를 관리
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const studentId = e.target.studentId.value;
     const password = e.target.password.value;
 
-    if (studentId === '12345' && password === 'password') {
-      alert('Login successful!');
-      navigate('/main');
-    } else {
-      alert('Invalid Student ID or Password.');
+    setLoading(true);  // 로딩 시작
+
+    try {
+      // API 호출해서 모든 사용자 데이터를 가져옴
+      const users = await fetchData('/api/login');
+
+      // 입력한 studentId와 password로 사용자 찾기
+      const user = users.find(user => user.studentId === studentId && user.password === password);
+
+      if (user) {
+        localStorage.setItem('studentId', studentId);
+
+        alert('Login successful!');
+        navigate('/main');  // 로그인 성공 시 studentId를 state로 전달하여 /main으로 이동
+      } else {
+        alert('Invalid Student ID or Password.');
+      }
+    } catch (error) {
+      setError('Error during login. Please try again.');
+      console.error('Error:', error);
+    } finally {
+      setLoading(false);  // 로딩 종료
     }
   };
 

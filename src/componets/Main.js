@@ -1,14 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import '../main.css'; 
+import '../main.css';
 import Calendar from 'react-calendar';
 import 'react-calendar/dist/Calendar.css';
 import { fetchData } from '../api'; // Swagger API 호출 파일
 
-
-
 function Main() {
-  const [studentId, setStudentId] = useState(''); // 학생 번호 상태
-
+  const [studentId, setStudentId] = useState(''); // 로그인한 ID 상태
   const [schedule, setSchedule] = useState([]); // 시간표 데이터 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -23,26 +20,33 @@ function Main() {
     classroom: '',
     professor: '',
   });
-   // 학생 번호 입력을 처리하는 함수
-   const handleStudentIdChange = (event) => {
-    setStudentId(event.target.value); // 학생 번호를 상태에 저장
-  };
-  
-   // 데이터를 가져오는 함수
-   const loadSchedule = async () => {
 
+  useEffect(() => {
+    // 로그인 후 localStorage에 저장된 studentId를 가져오기
+    const loggedInUserId = localStorage.getItem('studentId');
+    
+    if (loggedInUserId) {
+      setStudentId(loggedInUserId); // 값이 있으면 상태에 저장
+    } else {
+      // 로그인 정보가 없으면 기본 ID 설정 (원하는 경우)
+      setStudentId('/login');
+    }
+  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+
+  // 데이터를 가져오는 함수
+  const loadSchedule = async () => {
     if (!studentId) {
       setError('학생 번호를 입력해주세요.');
       return;
     }
     try {
       const response = await fetch(`http://localhost:5096/api/schedule/${studentId}`);
-      
+
       // 응답이 잘 왔는지 확인
       if (!response.ok) {
         throw new Error('Failed to fetch data');
       }
-      
+
       const data = await response.json();
       setSchedule(data); // 가져온 데이터를 상태에 저장
     } catch (error) {
@@ -55,8 +59,8 @@ function Main() {
     loadSchedule();
   }, []); // 빈 배열을 넣어서 한 번만 실행되게 설정
 
-  //Time - 6:00AM to 12:00AM
-    const hours = Array.from({ length: 18 }, (_, i) => {
+  // 시간대 처리
+  const hours = Array.from({ length: 18 }, (_, i) => {
     const hour = 6 + i;
     const suffix = hour >= 12 ? 'PM' : 'AM';
     const displayHour = hour > 12 ? hour - 12 : hour;
@@ -82,7 +86,6 @@ function Main() {
     });
   };
 
-  
   const renderWeekCalendar = () => {
     const startOfWeek = new Date(date);
     startOfWeek.setDate(date.getDate() - date.getDay()); // Start of week (Sunday)
@@ -95,42 +98,39 @@ function Main() {
     }
 
     return (
-        <div className="calendar-container">
-          {daysOfWeek.map((day, index) => (
-            <div key={index} className="day-box">
-              <div>{day.toLocaleDateString()}</div>
-              <div style={{ height: '100px', border: '1px solid #ccc' }}></div>
-            </div>
-          ))}
-        
-  </div>
-
-      
-      );
-    };
+      <div className="calendar-container">
+        {daysOfWeek.map((day, index) => (
+          <div key={index} className="day-box">
+            <div>{day.toLocaleDateString()}</div>
+            <div style={{ height: '100px', border: '1px solid #ccc' }}></div>
+          </div>
+        ))}
+      </div>
+    );
+  };
 
   return (
     <div style={{ textAlign: 'center', marginTop: '20px' }}>
       <h2>Course Schedule</h2>
-      <input
-        type="text"
-        value={studentId}
-        onChange={handleStudentIdChange}
-        placeholder="Student Number"
-      />
+      {/* 로그인한 ID 정보 표시 */}
+      <div style={{ marginBottom: '20px' }}>
+        <h3>Logged in as: {studentId}</h3>
+      </div>
+
       <button onClick={loadSchedule}>Show Timetable</button>
-      {/* Weekly Calnder */}
+      {/* Weekly Calendar */}
       {renderWeekCalendar()}
 
       {/* Form for Adding a Course */}
       <form onSubmit={handleAddCourse} className="add-course-form">
+        <h2>Add Personal Schedule</h2>
+
         <input
           type="text"
           name="courseCode"
           placeholder="Course Code"
           value={formData.courseCode}
           onChange={handleChange}
-
         />
         <input
           type="text"
@@ -139,7 +139,6 @@ function Main() {
           value={formData.courseName}
           onChange={handleChange}
           required
-      
         />
         <input
           type="text"
@@ -147,24 +146,20 @@ function Main() {
           placeholder="Day of Week"
           value={formData.dayOfWeek}
           onChange={handleChange}
-        
         />
-            <label htmlFor="startTime">Start Time</label>
-
+        <label htmlFor="startTime">Start Time</label>
         <input
           type="time"
           name="startTime"
           value={formData.startTime}
           onChange={handleChange}
-        
-        />    <label htmlFor="endTime">End Time</label>
-
+        />
+        <label htmlFor="endTime">End Time</label>
         <input
           type="time"
           name="endTime"
           value={formData.endTime}
           onChange={handleChange}
-
         />
         <input
           type="text"
@@ -172,7 +167,6 @@ function Main() {
           placeholder="Classroom"
           value={formData.classroom}
           onChange={handleChange}
-
         />
         <input
           type="text"
@@ -180,11 +174,8 @@ function Main() {
           placeholder="Professor"
           value={formData.professor}
           onChange={handleChange}
-        
         />
-        <button type="submit">
-          Add Course
-        </button>
+        <button type="submit">Add Course</button>
       </form>
 
       {/* Table for Displaying Courses */}
@@ -215,15 +206,12 @@ function Main() {
         </tbody>
       </table>
 
-       {/* Swagger 데이터 출력 */}
-       <div style={{ marginTop: '50px', color: 'gray' }}>
-      <h4>Swagger API Response</h4>
-      <pre>{JSON.stringify(schedule, null, 2)}</pre>
+      {/* Swagger 데이터 출력 */}
+      <div style={{ marginTop: '50px', color: 'gray' }}>
+        <h4>Swagger API Response</h4>
+        <pre>{JSON.stringify(schedule, null, 2)}</pre>
+      </div>
     </div>
-    
-    </div>
-
-    
   );
 }
 
