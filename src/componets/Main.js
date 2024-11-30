@@ -12,15 +12,15 @@ function Main() {
   const navigate = useNavigate();
 
   const [studentId, setStudentId] = useState(''); // 로그인한 ID 상태
+  const [password, setPassword] = useState(''); // 저장된 비밀번호 상태
+
   const [schedule, setSchedule] = useState([]); // 시간표 데이터 상태
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [date, setDate] = useState(new Date());
   const [courses, setCourses] = useState([]);
   const [formData, setFormData] = useState({
-    courseCode: '',
     courseName: '',
-    dayOfWeek: '',
     startTime: '',
     endTime: '',
     classroom: '',
@@ -30,16 +30,16 @@ function Main() {
   
 
   useEffect(() => {
-    // 로그인 후 localStorage에 저장된 studentId를 가져오기
+    // localStorage에서 studentId와 password 가져오기
     const loggedInUserId = localStorage.getItem('studentId');
-    
+    const savedPassword = localStorage.getItem('password');
     if (loggedInUserId) {
-      setStudentId(loggedInUserId); // 값이 있으면 상태에 저장
-    } else {
-      // 로그인 정보가 없으면 기본 ID 설정 (원하는 경우)
-      setStudentId('/login');
+      setStudentId(loggedInUserId);
     }
-  }, []); // 컴포넌트가 처음 렌더링될 때 한 번만 실행
+    if (savedPassword) {
+      setPassword(savedPassword);
+    }
+  }, []);
 
   // 데이터를 가져오는 함수
   const loadSchedule = async () => {
@@ -78,24 +78,71 @@ function Main() {
     setFormData({ ...formData, [name]: value });
   };
 
-  const handleAddCourse = (e) => {
+  const handleAddCourse = async (e) => {
     e.preventDefault();
-    setCourses([...courses, formData]);
-    setFormData({
-      courseCode: '',
-      courseName: '',
-      dayOfWeek: '',
-      startTime: '',
-      endTime: '',
-      classroom: '',
-      professor: '',
-    });
+    const loggedInUserId = localStorage.getItem('studentId');
+    const savedPassword = localStorage.getItem('password');
+  // console.log('Saved Password:', savedPassword); // Debugging
+
+    setStudentId(loggedInUserId);
+    setPassword(savedPassword);
+
+    // // Debugging console logs
+    // console.log("Debugging Form Data:");
+    // console.log("Student ID:", loggedInUserId);
+    // console.log("Course Name:", formData.courseName);
+    // console.log("Start Time:", new Date(formData.startTime));
+    // console.log("End Time:", new Date(formData.endTime));
+    // console.log("Classroom:", formData.classroom || null);
+    // console.log("Professor Name:", formData.professor || null);
+    // console.log("Password:", savedPassword);
+
+    if (!formData.courseName || !loggedInUserId || !savedPassword || !formData.startTime || !formData.endTime) {
+      alert('All required fields must be filled.');
+      return;
+    }
+
+    const newCourse = {
+      studentId: loggedInUserId,
+      courseName: formData.courseName,
+      startTime: new Date(formData.startTime), // JavaScript Date object
+      endTime: new Date(formData.endTime),    // JavaScript Date object
+      classroom: formData.classroom || null,
+      professorName: formData.professor || null,
+      password: savedPassword,
+    };
+
+    try {
+      const response = await fetch('http://localhost:5096/api/Schedule', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newCourse),
+      });
+      if (!response.ok) throw new Error('Failed to add course');
+      alert('Course added successfully!');
+      setFormData({
+        courseName: '',
+        startTime: '',
+        endTime: '',
+        classroom: '',
+        professor: '',
+
+    
+
+      });
+      await loadSchedule(); // Schedule 재로드
+    } catch (error) {
+      alert(error.message);
+    }
   };
 
   const handleLogout = () => {
     // 로그아웃 처리: localStorage 초기화 및 상태 초기화
     localStorage.removeItem('studentId');
     setStudentId('');
+    setPassword('');
     setSchedule([]);
     setCourses([]);
     alert('Logged out successfully!');
@@ -108,15 +155,14 @@ function Main() {
 
   return (
     <div className="main-container">
+  
   <h2 className="page-title">Course Schedule</h2>
-
+  
   <div className="logged-in-info">
     <h3>Logged in as: {studentId}</h3>
-
-    <button onClick={handleLogout} className="logout-button">
-    Logout
-  </button>
+    <button onClick={handleLogout} className="logout-button">Logout</button>
   </div>
+
       {/* Weekly Calendar */}
 
   <MyCalendar /> {/* Main 컴포넌트를 화면에 표시 */}
@@ -168,7 +214,7 @@ function Main() {
         Start Time <span className="required">*</span>
       </label>
       <input
-        type="time"
+      type="datetime-local"
         name="startTime"
         value={formData.startTime}
         onChange={handleChange}
@@ -180,7 +226,7 @@ function Main() {
         End Time <span className="required">*</span>
       </label>
       <input
-        type="time"
+    type="datetime-local"
         name="endTime"
         value={formData.endTime}
         onChange={handleChange}

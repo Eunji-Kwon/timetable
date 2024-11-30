@@ -79,7 +79,6 @@ const MyCalendar = () => {
       min={new Date(2024, 11, 1, 7, 0)} // 오전 7시부터 시작
       max={new Date(2024, 11, 1, 22, 0)} // 오후 10시까지 표시
       style={{ height: "100%" }}
-      className="custom-calendar" // 캘린더에 custom-class를 추가
 
     />
   </div>

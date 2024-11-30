@@ -34,6 +34,8 @@ function Login() {
       //  const user = await response.json();
       localStorage.setItem('studentId', studentId);
 
+      localStorage.setItem('password', password);
+
         alert('Login successful!');
         navigate('/main');  // 로그인 성공 시 studentId를 state로 전달하여 /main으로 이동
       } else {
